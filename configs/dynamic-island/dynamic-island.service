@@ -1,0 +1,13 @@
+[Unit]
+Description=Alnyz Dynamic Island Native Wayland
+After=graphical-session.target plasma-workspace.service
+
+[Service]
+Type=simple
+ExecStart=/home/arya/.local/bin/dynamic-island
+Restart=always
+RestartSec=2
+Environment=QT_QPA_PLATFORM=wayland
+
+[Install]
+WantedBy=graphical-session.target

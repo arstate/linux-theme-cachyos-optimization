@@ -1,0 +1,11 @@
+# Build and temporary files
+*.tmp
+*.log
+*.bak
+*~
+.DS_Store
+__pycache__/
+*.pyc
+
+# Local runtime pid
+collector.pid

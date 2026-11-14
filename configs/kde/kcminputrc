@@ -1,0 +1,8 @@
+[Libinput][13589][12320][YICHIP 2.4G Receiver Mouse]
+PointerAcceleration=0.800
+
+[Mouse]
+X11LibInputXAccelProfileFlat=true
+XLbInptAccelProfileFlat=false
+XLbInptPointerAcceleration=0.2
+cursorTheme=MacTahoe-dark

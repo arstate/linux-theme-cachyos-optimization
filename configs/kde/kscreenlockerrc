@@ -1,0 +1,6 @@
+[Daemon]
+Timeout=15
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=file:///home/arya/.local/share/wallpapers/MacVentura-Dark/
+PreviewImage=file:///home/arya/.local/share/wallpapers/MacVentura-Dark/
