@@ -1,0 +1,8 @@
+module org.vicko.wavetask
+linktarget wavetaskplugin
+optional plugin wavetaskplugin
+classname org_vicko_wavetaskPlugin
+typeinfo wavetask.qmltypes
+prefer :/qt/qml/org/vicko/wavetask/
+depends QtQuick
+

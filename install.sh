@@ -8,12 +8,15 @@
 
 set -eo pipefail
 
-REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TARGET_USER="${SUDO_USER:-$USER}"
-TARGET_HOME="${HOME}"
-if [ -n "${SUDO_USER:-}" ]; then
-    TARGET_HOME="$(getent passwd "$SUDO_USER" | cut -d: -f6)"
+if [ "$(id -u)" -eq 0 ]; then
+    echo -e "\033[1;31m[!] Please do NOT run install.sh with sudo. Run as normal user: ./install.sh\033[0m"
+    echo -e "\033[1;33m    The script will automatically prompt for sudo when required for system files.\033[0m"
+    exit 1
 fi
+
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TARGET_USER="$USER"
+TARGET_HOME="$HOME"
 
 echo -e "\033[1;36m====================================================================\033[0m"
 echo -e "\033[1;32m  🚀 CachyOS / KDE Plasma 6 MacOS Rice & System Optimization Setup\033[0m"
@@ -50,6 +53,17 @@ PACKAGES=(
 
 sudo pacman -S --needed --noconfirm "${PACKAGES[@]}" || true
 
+# Pre-deploy bundled WaveTask Qt6 QML plugin and layout template
+echo -e "Deploying bundled WaveTask Qt6 QML plugin and layout template..."
+sudo mkdir -p /usr/lib/qt6/qml/org/vicko/wavetask
+if [ -d "$REPO_DIR/configs/wavetask/qml-plugin" ]; then
+    sudo cp -r "$REPO_DIR/configs/wavetask/qml-plugin/"* /usr/lib/qt6/qml/org/vicko/wavetask/
+fi
+sudo mkdir -p /usr/share/plasma/layout-templates/org.vicko.wavetask.panel
+if [ -d "$REPO_DIR/configs/wavetask/layout-template" ]; then
+    sudo cp -r "$REPO_DIR/configs/wavetask/layout-template/"* /usr/share/plasma/layout-templates/org.vicko.wavetask.panel/
+fi
+
 if [ -n "$AUR_HELPER" ]; then
     echo -e "Installing AUR packages using $AUR_HELPER..."
     $AUR_HELPER -S --needed --noconfirm \
@@ -83,6 +97,11 @@ mkdir -p "$TARGET_HOME/.local/share/wallpapers"
 
 if [ -d "$REPO_DIR/assets/icons" ]; then
     cp -r "$REPO_DIR/assets/icons/"* "$TARGET_HOME/icon/" 2>/dev/null || true
+fi
+
+if [ -d "$REPO_DIR/assets/icons/hicolor" ]; then
+    mkdir -p "$TARGET_HOME/.local/share/icons/hicolor"
+    cp -r "$REPO_DIR/assets/icons/hicolor/"* "$TARGET_HOME/.local/share/icons/hicolor/" 2>/dev/null || true
 fi
 
 WALLPAPER_SRC="$REPO_DIR/assets/wallpapers/White_cat_sitting_on_precipice_2K.jpeg"
@@ -180,14 +199,17 @@ echo -e "\033[1;34m[5/8] Building & Installing Dynamic Island Wayland Native Dae
 DI_BUILD_DIR="/tmp/dynamic-island-build-$$"
 mkdir -p "$TARGET_HOME/.local/bin"
 
-if git clone --depth=1 https://github.com/arstate/dynamic-island.git "$DI_BUILD_DIR"; then
-    cmake -S "$DI_BUILD_DIR" -B "$DI_BUILD_DIR/build" -G Ninja -DCMAKE_INSTALL_PREFIX="$TARGET_HOME/.local"
-    cmake --build "$DI_BUILD_DIR/build"
-    cmake --install "$DI_BUILD_DIR/build"
+if git clone --depth=1 https://github.com/arstate/dynamic-island.git "$DI_BUILD_DIR" 2>/dev/null; then
+    if cmake -S "$DI_BUILD_DIR" -B "$DI_BUILD_DIR/build" -G Ninja -DCMAKE_INSTALL_PREFIX="$TARGET_HOME/.local" 2>/dev/null && \
+       cmake --build "$DI_BUILD_DIR/build" 2>/dev/null && \
+       cmake --install "$DI_BUILD_DIR/build" 2>/dev/null; then
+        echo -e "\033[1;32m✓ Dynamic Island binary compiled and installed to ~/.local/bin/dynamic-island\033[0m"
+    else
+        echo -e "\033[1;33m[!] Dynamic Island compile failed or skipped; continuing configuration...\033[0m"
+    fi
     rm -rf "$DI_BUILD_DIR"
-    echo -e "\033[1;32m✓ Dynamic Island binary compiled and installed to ~/.local/bin/dynamic-island\033[0m"
 else
-    echo -e "\033[1;31m✗ Failed to clone dynamic-island repo, skipping compile.\033[0m"
+    echo -e "\033[1;33m[!] Failed to clone dynamic-island repo, skipping compile.\033[0m"
 fi
 
 # Setup systemd user service and autostart
@@ -241,6 +263,10 @@ deploy_config "$REPO_DIR/configs/kde/konsolerc" "$CONFIG_DIR/konsolerc"
 deploy_config "$REPO_DIR/configs/kde/plasmarc" "$CONFIG_DIR/plasmarc"
 deploy_config "$REPO_DIR/configs/kde/plasmashellrc" "$CONFIG_DIR/plasmashellrc"
 deploy_config "$REPO_DIR/configs/kde/plasma-org.kde.plasma.desktop-appletsrc" "$CONFIG_DIR/plasma-org.kde.plasma.desktop-appletsrc"
+deploy_config "$REPO_DIR/configs/kde/plasmanotifyrc" "$CONFIG_DIR/plasmanotifyrc"
+deploy_config "$REPO_DIR/configs/kde/powerdevilrc" "$CONFIG_DIR/powerdevilrc"
+deploy_config "$REPO_DIR/configs/kde/powermanagementprofilesrc" "$CONFIG_DIR/powermanagementprofilesrc"
+deploy_config "$REPO_DIR/configs/kde/systemmonitorrc" "$CONFIG_DIR/systemmonitorrc"
 deploy_config "$REPO_DIR/configs/kde/kcminputrc" "$CONFIG_DIR/kcminputrc"
 deploy_config "$REPO_DIR/configs/kde/kscreenlockerrc" "$CONFIG_DIR/kscreenlockerrc"
 deploy_config "$REPO_DIR/configs/kde/krunnerrc" "$CONFIG_DIR/krunnerrc"
@@ -270,6 +296,24 @@ deploy_config "$REPO_DIR/configs/gtk/gtk-3.0/settings.ini" "$CONFIG_DIR/gtk-3.0/
 deploy_config "$REPO_DIR/configs/gtk/gtk-3.0/gtk.css" "$CONFIG_DIR/gtk-3.0/gtk.css"
 deploy_config "$REPO_DIR/configs/gtk/gtk-4.0/settings.ini" "$CONFIG_DIR/gtk-4.0/settings.ini"
 deploy_config "$REPO_DIR/configs/gtk/gtk-4.0/gtk.css" "$CONFIG_DIR/gtk-4.0/gtk.css"
+deploy_config "$REPO_DIR/configs/gtk/gtkrc" "$CONFIG_DIR/gtkrc"
+deploy_config "$REPO_DIR/configs/gtk/gtkrc-2.0" "$CONFIG_DIR/gtkrc-2.0"
+
+deploy_config "$REPO_DIR/configs/chrome-flags.conf" "$CONFIG_DIR/chrome-flags.conf"
+mkdir -p "$CONFIG_DIR/environment.d"
+if [ -d "$REPO_DIR/configs/environment.d" ]; then
+    cp -r "$REPO_DIR/configs/environment.d/"* "$CONFIG_DIR/environment.d/" 2>/dev/null || true
+fi
+
+# Deploy custom applications (.desktop files for WhatsApp, YouTube, Figma, Dynamic Island)
+mkdir -p "$TARGET_HOME/.local/share/applications"
+if [ -d "$REPO_DIR/configs/applications" ]; then
+    for app in "$REPO_DIR/configs/applications"/*.desktop; do
+        if [ -f "$app" ]; then
+            deploy_config "$app" "$TARGET_HOME/.local/share/applications/$(basename "$app")"
+        fi
+    done
+fi
 
 deploy_config "$REPO_DIR/configs/alacritty/alacritty.toml" "$CONFIG_DIR/alacritty/alacritty.toml"
 deploy_config "$REPO_DIR/configs/fish/config.fish" "$CONFIG_DIR/fish/config.fish"

@@ -57,20 +57,24 @@ Lakukan seluruh instalasi dan replikasi berikut ini secara otomatis dari termina
         - Grouping strategy: `groupingStrategy=0` (Task grouping rapi)
         - Audio stream indicator: `indicateAudioStreams=false`, `interactiveMute=false`
         - Reflection: `showReflection=false`
-        - Pinned Favorite Apps: System Settings, Discover, Dolphin File Manager, Google Chrome, Konsole, Plasma System Monitor, Web Apps
+        - Pinned Favorite Apps: System Settings, Discover, Dolphin File Manager, Google Chrome, Konsole, Plasma System Monitor, WhatsApp Web PWA, YouTube PWA
+        - Pre-compiled Qt6 QML plugin (`libwavetaskplugin.so`) dan layout template terpasang di `/usr/lib/qt6/qml/org/vicko/wavetask/` dan `/usr/share/plasma/layout-templates/org.vicko.wavetask.panel/`
       - **Secondary Bottom Panel (Panel 517)**:
         - Floating panel 40px berisi Trash (`org.kde.plasma.trash`), Margins Separator, dan AppGrid Launcher Center (`dev.xarbit.appgrid` dengan trigger tombol `Meta`, background opacity 100%, corner radius 25px).
 
    c. **KWin Effects, Tiling Scripts & Window Rules**:
       - Aktifkan KWin Effects: better_blur_dx (BlurStrength=15, CornerRadius=24), forceblur (patterns: Nautilus, yakuake, urxvt), glide effect (10°), scale effect (0.6), diminactive (50%).
-      - Aktifkan KWin Scripts:
+      - Aktifkan KWin Scripts (5 scripts lengkap di ~/.local/share/kwin/scripts/):
         - KZones (FancyZones window snapping dengan 6 layout kustom: Twin Full, Priority Grid, Quadrant Grid, Creator Workspace, Master & Stack, Media Timeline; shortcut Meta+Space untuk snap, Ctrl+Alt+C toggle overlay, Ctrl+Alt+D cycle).
         - Sticky Window Snapping (tepi jendela menempel rapi saat resize).
+        - Karousel (Scrollable tiling extension).
+        - FullScreenify (macOS full-screen behavior ke workspace baru).
+        - Truely Maximized (Sembunyikan titlebar saat maximized).
       - Pasang KWin Window Rules (~/.config/kwinrulesrc):
         - Otomatis atur ukuran dan penempatan: CopyQ (450x550), Konsole (600x400), System Monitor (600x450), Kalkulator (320x500), Window default (1000x600).
       - Aktifkan overview effect pada Meta+W dan edge barrier.
 
-   d. **Trackpad Gestures Laptop (1:1 Mac Feel)**:
+   d. **Trackpad Gestures Laptop (1:1 Mac Feel) & Power Management**:
       - Pasang libinput-gestures (~/.config/libinput-gestures.conf):
         - 3 Jari Swipe Bawah: Expose / Present Windows
         - 3 Jari Swipe Atas: Desktop Grid / Mission Control
@@ -78,11 +82,18 @@ Lakukan seluruh instalasi dan replikasi berikut ini secara otomatis dari termina
         - 4 Jari Swipe Atas / Bawah: Maximize / Minimize Window
         - 4 Jari Swipe Kiri / Kanan: Switch Virtual Desktop
       - Aktifkan service: `libinput-gestures-setup autostart start`
+      - Power Management (~/.config/powerdevilrc & powermanagementprofilesrc): Anti-sleep saat lid ditutup (`LidAction=0`), layar tidak dim/mati mendadak (`DimDisplayWhenIdle=false`).
 
    e. **Font Rendering, Terminal & App Tweaks**:
       - Fontconfig (~/.config/fontconfig/fonts.conf): 1080p pixel-perfect sharpness, DPI 86, subpixel RGB, slight hinting, antialiasing, mapping Calibri & Wingdings.
+      - Notifikasi (~/.config/plasmanotifyrc): Popup dibisukan (`ShowPopups=false`) agar Dynamic Island memegang kendali notifikasi tanpa tabrakan.
       - Alacritty: Opacity 0.8, dark titlebar, Nord color scheme, monospace size 12.
       - Fish Shell: config.fish dengan integrasi CachyOS fish config dan alias kustom (AI='qwen', remwm).
+      - Dolphin File Manager: Menubar disabled (clean macOS style), delete item enabled, preview size 144px, full multimedia thumbnailers.
+      - Konsole: Menubar disabled (clean macOS style).
+      - Spectacle: OCR aktif (eng, ind), auto close after OCR, quit after save.
+      - KRunner: FreeFloating=true (Spotlight style di tengah layar).
+      - PWA Launchers: Desktop entries & 256x256 hicolor icons untuk WhatsApp Web, YouTube, Figma GPU Fix.
       - Dolphin File Manager: Menubar disabled (clean macOS style), delete item enabled, preview size 144px, full multimedia thumbnailers.
       - Konsole: Menubar disabled (clean macOS style).
       - Spectacle: OCR aktif (eng, ind), auto close after OCR, quit after save.

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Figma (GPU Fix)
+Comment=Figma desktop app with NVIDIA WebGL fix
+Exec=figma-linux --disable-gpu-sandbox --ignore-gpu-blocklist --disable-software-rasterizer --ozone-platform=x11 %U
+Icon=figma-linux
+Terminal=false
+Type=Application
+Categories=Development;Graphics;
+MimeType=x-scheme-handler/figma;
