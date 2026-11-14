@@ -1,0 +1,9 @@
+[Common]
+OutlineCloseButton=true
+OutlineEnabled=false
+
+[Style]
+MenuOpacity=0
+
+[Windeco]
+TitleAlignment=AlignLeft

@@ -1,0 +1,12 @@
+[Unit]
+Description=Dynamic Island v1.3 Collector Daemon
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash "/mnt/HDD-2/BACKUP LINUX/FILE DATA/SOFTWARE LINUX/island linux/plasma-dynamic-island/scripts/di-v13-collector.sh"
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,37 @@
+[Annotations]
+annotationToolType=6
+arrowStrokeWidth=2
+ellipseFillColor=255,0,0,0
+ellipseStrokeColor=255,255,255
+freehandShadow=false
+highlighterStrokeColor=213,255,0
+highlighterStrokeWidth=3
+lineShadow=false
+lineStrokeColor=170,0,0
+lineStrokeWidth=2
+rectangleFillColor=192,195,0,0
+rectangleStrokeColor=255,0,230
+textFont=Noto Sans,28,-1,0,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
+textFontColor=255,0,0
+
+[General]
+clipboardGroup=PostScreenshotCopyLocation
+closeAfterOcr=true
+ocrLanguages=eng,ind
+
+[GuiConfig]
+includePointer=true
+quitAfterSaveCopyExport=true
+
+[ImageSave]
+lastImageSaveAsLocation=
+lastImageSaveLocation=file:///home/arya/Pictures/Screenshots/Screenshot_20261114_112400.png
+translatedScreenshotsFolder=Screenshots
+
+[VideoSave]
+preferredVideoFormat=2
+translatedScreencastsFolder=Screencasts
+
+[ViewerWindow]
+1920x1080 screen: Height=566
+1920x1080 screen: Width=1000

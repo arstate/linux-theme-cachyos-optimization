@@ -41,8 +41,8 @@ echo -e "\033[1;34m[1/8] Installing System & Build Dependencies...\033[0m"
 
 PACKAGES=(
     git curl wget rsync jq optipng inkscape dialog
-    cmake ninja qt6-base qt6-declarative qt6-shadertools layer-shell-qt
-    kirigami kguiaddons kconfig kidletime kglobalaccel
+    cmake ninja extra-cmake-modules gcc vulkan-headers qt6-base qt6-declarative qt6-shadertools layer-shell-qt
+    kirigami kguiaddons kconfig kidletime kglobalaccel xdotool
     plasma-workspace plasma-pa wireplumber networkmanager bluez-utils spectacle
     kvantum kvantum-qt6 alacritty fish fastfetch
     ananicy-cpp cachyos-ananicy-rules scx-scheds zram-generator
@@ -55,7 +55,8 @@ if [ -n "$AUR_HELPER" ]; then
     $AUR_HELPER -S --needed --noconfirm \
         kwin-effects-better-blur-dx \
         kwin-scripts-forceblur \
-        wavetask || true
+        wavetask \
+        libinput-gestures || true
 else
     echo -e "\033[1;33m[!] AUR helper not found. Installing yay automatically...\033[0m"
     sudo pacman -S --needed --noconfirm base-devel git
@@ -66,7 +67,8 @@ else
     $AUR_HELPER -S --needed --noconfirm \
         kwin-effects-better-blur-dx \
         kwin-scripts-forceblur \
-        wavetask || true
+        wavetask \
+        libinput-gestures || true
 fi
 
 # ------------------------------------------------------------------------------
@@ -195,6 +197,9 @@ mkdir -p "$TARGET_HOME/.config/autostart"
 if [ -f "$REPO_DIR/configs/dynamic-island/dynamic-island.service" ]; then
     sed "s|/home/arya|$TARGET_HOME|g" "$REPO_DIR/configs/dynamic-island/dynamic-island.service" > "$TARGET_HOME/.config/systemd/user/dynamic-island.service"
 fi
+if [ -f "$REPO_DIR/configs/dynamic-island/dynamic-island-collector.service" ]; then
+    sed "s|/home/arya|$TARGET_HOME|g" "$REPO_DIR/configs/dynamic-island/dynamic-island-collector.service" > "$TARGET_HOME/.config/systemd/user/dynamic-island-collector.service"
+fi
 if [ -f "$REPO_DIR/configs/dynamic-island/dynamic-island.conf" ]; then
     sed "s|/home/arya|$TARGET_HOME|g" "$REPO_DIR/configs/dynamic-island/dynamic-island.conf" > "$TARGET_HOME/.config/dynamic-island.conf"
 fi
@@ -216,6 +221,7 @@ mkdir -p "$CONFIG_DIR/gtk-3.0"
 mkdir -p "$CONFIG_DIR/gtk-4.0"
 mkdir -p "$CONFIG_DIR/alacritty"
 mkdir -p "$CONFIG_DIR/fish"
+mkdir -p "$CONFIG_DIR/fontconfig"
 
 # Function to copy config with home path substitution
 deploy_config() {
@@ -228,6 +234,10 @@ deploy_config() {
 
 deploy_config "$REPO_DIR/configs/kde/kdeglobals" "$CONFIG_DIR/kdeglobals"
 deploy_config "$REPO_DIR/configs/kde/kwinrc" "$CONFIG_DIR/kwinrc"
+deploy_config "$REPO_DIR/configs/kde/kwinrulesrc" "$CONFIG_DIR/kwinrulesrc"
+deploy_config "$REPO_DIR/configs/kde/breezerc" "$CONFIG_DIR/breezerc"
+deploy_config "$REPO_DIR/configs/kde/spectaclerc" "$CONFIG_DIR/spectaclerc"
+deploy_config "$REPO_DIR/configs/kde/konsolerc" "$CONFIG_DIR/konsolerc"
 deploy_config "$REPO_DIR/configs/kde/plasmarc" "$CONFIG_DIR/plasmarc"
 deploy_config "$REPO_DIR/configs/kde/plasmashellrc" "$CONFIG_DIR/plasmashellrc"
 deploy_config "$REPO_DIR/configs/kde/plasma-org.kde.plasma.desktop-appletsrc" "$CONFIG_DIR/plasma-org.kde.plasma.desktop-appletsrc"
@@ -238,12 +248,19 @@ deploy_config "$REPO_DIR/configs/kde/kglobalshortcutsrc" "$CONFIG_DIR/kglobalsho
 deploy_config "$REPO_DIR/configs/kde/dolphinrc" "$CONFIG_DIR/dolphinrc"
 deploy_config "$REPO_DIR/configs/kde/kwinoutputconfig.json" "$CONFIG_DIR/kwinoutputconfig.json"
 
+deploy_config "$REPO_DIR/configs/fontconfig/fonts.conf" "$CONFIG_DIR/fontconfig/fonts.conf"
+deploy_config "$REPO_DIR/configs/libinput/libinput-gestures.conf" "$CONFIG_DIR/libinput-gestures.conf"
+which libinput-gestures-setup >/dev/null 2>&1 && libinput-gestures-setup autostart start || true
+
 deploy_config "$REPO_DIR/configs/kvantum/kvantum.kvconfig" "$CONFIG_DIR/Kvantum/kvantum.kvconfig"
 if [ -d "$REPO_DIR/configs/kvantum/MacTahoeDark" ]; then
     cp -r "$REPO_DIR/configs/kvantum/MacTahoeDark" "$CONFIG_DIR/Kvantum/"
 fi
 if [ -d "$REPO_DIR/configs/kvantum/MacTahoe" ]; then
     cp -r "$REPO_DIR/configs/kvantum/MacTahoe" "$CONFIG_DIR/Kvantum/"
+fi
+if [ -d "$REPO_DIR/configs/kvantum/MacVentura" ]; then
+    cp -r "$REPO_DIR/configs/kvantum/MacVentura" "$CONFIG_DIR/Kvantum/"
 fi
 if [ -d "$REPO_DIR/configs/kvantum/WhiteSur" ]; then
     cp -r "$REPO_DIR/configs/kvantum/WhiteSur" "$CONFIG_DIR/Kvantum/"

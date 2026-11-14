@@ -11,7 +11,7 @@ TARGET_HOME="${HOME}"
 echo -e "\033[1;36mRestoring configurations to $TARGET_HOME...\033[0m"
 
 CONFIG_DIR="$TARGET_HOME/.config"
-mkdir -p "$CONFIG_DIR/Kvantum" "$CONFIG_DIR/gtk-3.0" "$CONFIG_DIR/gtk-4.0" "$CONFIG_DIR/alacritty" "$CONFIG_DIR/fish" "$TARGET_HOME/icon"
+mkdir -p "$CONFIG_DIR/Kvantum" "$CONFIG_DIR/gtk-3.0" "$CONFIG_DIR/gtk-4.0" "$CONFIG_DIR/alacritty" "$CONFIG_DIR/fish" "$CONFIG_DIR/fontconfig" "$TARGET_HOME/icon"
 
 deploy_config() {
     local src="$1"
@@ -24,6 +24,10 @@ deploy_config() {
 
 deploy_config "$REPO_DIR/configs/kde/kdeglobals" "$CONFIG_DIR/kdeglobals"
 deploy_config "$REPO_DIR/configs/kde/kwinrc" "$CONFIG_DIR/kwinrc"
+deploy_config "$REPO_DIR/configs/kde/kwinrulesrc" "$CONFIG_DIR/kwinrulesrc"
+deploy_config "$REPO_DIR/configs/kde/breezerc" "$CONFIG_DIR/breezerc"
+deploy_config "$REPO_DIR/configs/kde/spectaclerc" "$CONFIG_DIR/spectaclerc"
+deploy_config "$REPO_DIR/configs/kde/konsolerc" "$CONFIG_DIR/konsolerc"
 deploy_config "$REPO_DIR/configs/kde/plasmarc" "$CONFIG_DIR/plasmarc"
 deploy_config "$REPO_DIR/configs/kde/plasmashellrc" "$CONFIG_DIR/plasmashellrc"
 deploy_config "$REPO_DIR/configs/kde/plasma-org.kde.plasma.desktop-appletsrc" "$CONFIG_DIR/plasma-org.kde.plasma.desktop-appletsrc"
@@ -33,6 +37,9 @@ deploy_config "$REPO_DIR/configs/kde/krunnerrc" "$CONFIG_DIR/krunnerrc"
 deploy_config "$REPO_DIR/configs/kde/kglobalshortcutsrc" "$CONFIG_DIR/kglobalshortcutsrc"
 deploy_config "$REPO_DIR/configs/kde/dolphinrc" "$CONFIG_DIR/dolphinrc"
 deploy_config "$REPO_DIR/configs/kde/kwinoutputconfig.json" "$CONFIG_DIR/kwinoutputconfig.json"
+
+deploy_config "$REPO_DIR/configs/fontconfig/fonts.conf" "$CONFIG_DIR/fontconfig/fonts.conf"
+deploy_config "$REPO_DIR/configs/libinput/libinput-gestures.conf" "$CONFIG_DIR/libinput-gestures.conf"
 
 deploy_config "$REPO_DIR/configs/kvantum/kvantum.kvconfig" "$CONFIG_DIR/Kvantum/kvantum.kvconfig"
 deploy_config "$REPO_DIR/configs/gtk/gtk-3.0/settings.ini" "$CONFIG_DIR/gtk-3.0/settings.ini"

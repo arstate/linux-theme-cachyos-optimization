@@ -48,25 +48,47 @@ Lakukan seluruh instalasi dan replikasi berikut ini secara otomatis dari termina
         - Pasang konfigurasi ~/.config/dynamic-island.conf (look=notch, accent=#ff453a, idleWidth=130, compactWidth=160, weather Sidoarjo, quick buttons, photo widget, history apps)
         - Aktifkan systemd user service: dynamic-island.service (restart=always, QT_QPA_PLATFORM=wayland)
         - Pasang collector script di ~/.local/share/plasma-dynamic-island/scripts/di-v13-collector.sh dan autostart desktop entry
-      - **Bottom Floating Dock (Panel 492)**:
-        - Widget: Wave Taskbar (org.vicko.wavetask) dengan ketinggian 114px, auto-hide / dodge windows, icon magnification 80%, amplitude 1.1, pinned favorite apps.
+      - **Bottom Floating Dock (Panel 492 - WaveTask)**:
+        - Widget Task Manager: **WaveTask (`org.vicko.wavetask`)**
+        - Ketebalan dock: `thickness=114px`
+        - Tipe panel: `panelLengthMode=1` (Fit Content / centered floating dock)
+        - Visibilitas: `panelVisibility=2` (Dodge Windows / Auto-Hide cerdas ala macOS Dock)
+        - Efek zoom pembesaran icon: `magnification=80%`, `amplitud=1.1`, `iconSize=54px`
+        - Grouping strategy: `groupingStrategy=0` (Task grouping rapi)
+        - Audio stream indicator: `indicateAudioStreams=false`, `interactiveMute=false`
+        - Reflection: `showReflection=false`
+        - Pinned Favorite Apps: System Settings, Discover, Dolphin File Manager, Google Chrome, Konsole, Plasma System Monitor, Web Apps
       - **Secondary Bottom Panel (Panel 517)**:
-        - Floating panel 40px berisi Trash, Margins Separator, dan AppGrid Launcher Center (shortcut Meta key).
+        - Floating panel 40px berisi Trash (`org.kde.plasma.trash`), Margins Separator, dan AppGrid Launcher Center (`dev.xarbit.appgrid` dengan trigger tombol `Meta`, background opacity 100%, corner radius 25px).
 
-   c. **KWin Effects & Tiling Scripts**:
+   c. **KWin Effects, Tiling Scripts & Window Rules**:
       - Aktifkan KWin Effects: better_blur_dx (BlurStrength=15, CornerRadius=24), forceblur (patterns: Nautilus, yakuake, urxvt), glide effect (10°), scale effect (0.6), diminactive (50%).
       - Aktifkan KWin Scripts:
         - KZones (FancyZones window snapping dengan 6 layout kustom: Twin Full, Priority Grid, Quadrant Grid, Creator Workspace, Master & Stack, Media Timeline; shortcut Meta+Space untuk snap, Ctrl+Alt+C toggle overlay, Ctrl+Alt+D cycle).
         - Sticky Window Snapping (tepi jendela menempel rapi saat resize).
+      - Pasang KWin Window Rules (~/.config/kwinrulesrc):
+        - Otomatis atur ukuran dan penempatan: CopyQ (450x550), Konsole (600x400), System Monitor (600x450), Kalkulator (320x500), Window default (1000x600).
       - Aktifkan overview effect pada Meta+W dan edge barrier.
 
-   d. **Terminal, Shell & App Tweaks**:
+   d. **Trackpad Gestures Laptop (1:1 Mac Feel)**:
+      - Pasang libinput-gestures (~/.config/libinput-gestures.conf):
+        - 3 Jari Swipe Bawah: Expose / Present Windows
+        - 3 Jari Swipe Atas: Desktop Grid / Mission Control
+        - 3 Jari Swipe Kiri / Kanan: Browser History Back / Forward
+        - 4 Jari Swipe Atas / Bawah: Maximize / Minimize Window
+        - 4 Jari Swipe Kiri / Kanan: Switch Virtual Desktop
+      - Aktifkan service: `libinput-gestures-setup autostart start`
+
+   e. **Font Rendering, Terminal & App Tweaks**:
+      - Fontconfig (~/.config/fontconfig/fonts.conf): 1080p pixel-perfect sharpness, DPI 86, subpixel RGB, slight hinting, antialiasing, mapping Calibri & Wingdings.
       - Alacritty: Opacity 0.8, dark titlebar, Nord color scheme, monospace size 12.
       - Fish Shell: config.fish dengan integrasi CachyOS fish config dan alias kustom (AI='qwen', remwm).
       - Dolphin File Manager: Menubar disabled (clean macOS style), delete item enabled, preview size 144px, full multimedia thumbnailers.
+      - Konsole: Menubar disabled (clean macOS style).
+      - Spectacle: OCR aktif (eng, ind), auto close after OCR, quit after save.
       - KRunner: FreeFloating=true (Spotlight style di tengah layar).
 
-   e. **CachyOS Performance & Kernel Optimizations**:
+   f. **CachyOS Performance & Kernel Optimizations**:
       - Linux Kernel BORE + LTO (linux-cachyos-bore-lto) responsiveness tuning.
       - ananicy-cpp service aktif dengan cachyos-ananicy-rules (auto nice priority optimizer).
       - ZRAM Generator aktif dengan algoritma zstd, ukuran 2x RAM, swap priority 100.
@@ -104,9 +126,11 @@ Execute the complete setup automatically via terminal:
    - Window decorations: __aurorae__svg__MacVentura-Dark with traffic-light buttons on the LEFT (Close, Minimize, Maximize / XIA) and BorderlessMaximizedWindows=true.
    - Top Panel (32px): Kpple Apple Menu (cat2 icon) + Application Title Bar + Global Menu + Spacer + KDE Control Station + Tray.
    - Dynamic Island Wayland Native Daemon: Compiled from https://github.com/arstate/dynamic-island into ~/.local/bin/dynamic-island, configured with notch style, Sidoarjo weather, systemd user service enabled.
-   - Bottom Dock (114px): Wave Taskbar (org.vicko.wavetask) with magnification, auto-hide / dodge windows.
+   - Bottom Dock (114px): Wave Taskbar (org.vicko.wavetask) with magnification=80%, amplitude=1.1, iconSize=54px, auto-hide / dodge windows.
    - Secondary Floating Panel: AppGrid Launcher (Meta key trigger) + Trash.
-   - KWin Effects & Scripts: better-blur-dx, forceblur, KZones (with 6 custom productivity layouts), Sticky Window Snapping.
+   - KWin Effects, Scripts & Window Rules: better-blur-dx, forceblur, KZones (with 6 custom productivity layouts), Sticky Window Snapping, and window rules for CopyQ, terminal, kalkulator, system monitor.
+   - Laptop Trackpad Gestures: libinput-gestures (3-finger swipe down for Expose, 3-finger swipe up for Mission Control grid, 4-finger swipe for minimize/maximize and desktop switching).
+   - Font Sharpness: fontconfig (fonts.conf with 1080p pixel-perfect sharpness, DPI 86, subpixel RGB, slight hinting).
    - Wallpaper: 2K White Cat on Precipice.
    - CachyOS Optimizations: BORE Kernel, ananicy-cpp process priority auto-tuner, zram-generator (zstd, 2x RAM), cachyos-rate-mirrors.timer.
    - Clean reload of KWin, Plasma Shell, and Dynamic Island service.
